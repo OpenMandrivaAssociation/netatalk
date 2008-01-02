@@ -34,6 +34,7 @@ BuildRequires:	quota
 BuildRequires:	tcp_wrappers-devel
 BuildConflicts: xfs-devel
 Conflicts:	podracer
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 netatalk is an implementation of the AppleTalk Protocol Suite for Unix/Linux
