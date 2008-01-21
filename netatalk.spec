@@ -5,7 +5,7 @@
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
 Version:	2.0.3
-Release:	%mkrel 9
+Release:	%mkrel 10
 License:	BSD
 Group:		System/Servers
 URL:		http://%{name}.sourceforge.net/
@@ -19,7 +19,7 @@ Requires:	groff-perl
 Requires:	openssl
 Requires:	tetex-dvips
 BuildRequires:	libtool
-BuildRequires:	autoconf2.5
+BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	chrpath
 BuildRequires:	cracklib-devel
