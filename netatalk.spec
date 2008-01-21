@@ -24,7 +24,7 @@ BuildRequires:	automake
 BuildRequires:	chrpath
 BuildRequires:	cracklib-devel
 BuildRequires:	cups-devel
-BuildRequires:	db4-devel 
+BuildRequires:	db4.2-devel 
 BuildRequires:	gnutls-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	openslp-devel
@@ -101,14 +101,12 @@ libtoolize --copy --force; aclocal -I macros; autoconf; automake -a -c --foreign
 export PKGLIBDIR=%{_libdir}/netatalk
 export LD_PRELOAD=
 
-CFLAGS="$RPM_OPT_FLAGS -fomit-frame-pointer -fsigned-char" ./configure \
+CFLAGS="$RPM_OPT_FLAGS -fomit-frame-pointer -fsigned-char"
+%configure2_5x \
+    --libexec=%{_bindir} \
+    --localstatedir=%{_var} \
     --enable-shared \
     --enable-static \
-    --prefix=%{_prefix} \
-    --libdir=%{_libdir} \
-    --libexec=%{_bindir} \
-    --sysconfdir=%{_sysconfdir} \
-    --localstatedir=%{_var} \
     --with-uams-path=%{_libdir}/netatalk/uams \
     --with-msg-dir=%{_libdir}/netatalk/msg \
     --with-ssl-dir=%{_prefix} \
