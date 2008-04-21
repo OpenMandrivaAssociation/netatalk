@@ -5,7 +5,7 @@
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
 Version:	2.0.3
-Release:	%mkrel 10
+Release:	%mkrel 11
 License:	BSD
 Group:		System/Servers
 URL:		http://%{name}.sourceforge.net/
@@ -14,6 +14,7 @@ Patch0:		netatalk-mdk-etc2ps.patch
 Patch1:		netatalk-2.0.3-pinit.patch
 Patch2:		netatalk-shared.diff
 Patch3:		netatalk-2008.diff
+Patch4:		netatalk-bug25158.diff
 Requires(pre):	rpm-helper
 Requires:	groff-perl
 Requires:	openssl
@@ -86,6 +87,7 @@ This package contains the static atalk library and its header files.
 %patch1 -p1 -b .pinit
 %patch2 -p0 -b .shared
 %patch3 -p0 -b .2008
+%patch4 -p0 -b .bug25158
 
 #(sb) breaks autoconf
 rm -fr autom4te.cache
