@@ -167,7 +167,9 @@ mv %{buildroot}%{_mandir}/man1/uniconv.1 %{buildroot}%{_mandir}/man1/uniconvn.1
 
 %post
 %_post_service atalk
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 # after the first install only
 if [ "$1" = 1 ]; then
 	# add the ddp lines to /etc/services
@@ -218,9 +220,13 @@ _EOD3_
 	fi
 fi
 
+%if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %postun -n %{libname} -p /sbin/ldconfig
+%endif
 
 %clean
 rm -rf %{buildroot}
