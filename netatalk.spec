@@ -5,16 +5,17 @@
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
 Version:	2.0.3
-Release:	%mkrel 12
+Release:	%mkrel 13
 License:	BSD
 Group:		System/Servers
-URL:		http://%{name}.sourceforge.net/
+URL:		http://netatalk.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		netatalk-mdk-etc2ps.patch
 Patch1:		netatalk-2.0.3-pinit.patch
 Patch2:		netatalk-shared.diff
 Patch3:		netatalk-2008.diff
 Patch4:		netatalk-bug25158.diff
+Patch5:		netatalk-2.0.3-CVE-2008-5718.diff
 Requires(pre):	rpm-helper
 Requires:	groff-perl
 Requires:	openssl
@@ -88,6 +89,7 @@ This package contains the static atalk library and its header files.
 %patch2 -p0 -b .shared
 %patch3 -p0 -b .2008
 %patch4 -p0 -b .bug25158
+%patch5 -p0 -b .CVE-2008-5718
 
 #(sb) breaks autoconf
 rm -fr autom4te.cache
@@ -98,12 +100,14 @@ mv doc/htmldocs/uniconv.1.html doc/htmldocs/uniconvn.1.html
 sed -i 's|uniconv|uniconvn|g' doc/htmldocs/uniconvn.1.html
 
 %build
+%serverbuild
+
 libtoolize --copy --force; aclocal -I macros; autoconf; automake -a -c --foreign
 
 export PKGLIBDIR=%{_libdir}/netatalk
 export LD_PRELOAD=
+export CFLAGS="$CFLAGS -fomit-frame-pointer -fsigned-char"
 
-CFLAGS="$RPM_OPT_FLAGS -fomit-frame-pointer -fsigned-char"
 %configure2_5x \
     --libexec=%{_bindir} \
     --localstatedir=%{_var} \
