@@ -4,8 +4,8 @@
 
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
-Version:	2.0.3
-Release:	%mkrel 13
+Version:	2.0.4
+Release:	%mkrel 1
 License:	BSD
 Group:		System/Servers
 URL:		http://netatalk.sourceforge.net/
@@ -15,7 +15,6 @@ Patch1:		netatalk-2.0.3-pinit.patch
 Patch2:		netatalk-shared.diff
 Patch3:		netatalk-2008.diff
 Patch4:		netatalk-bug25158.diff
-Patch5:		netatalk-2.0.3-CVE-2008-5718.diff
 Requires(pre):	rpm-helper
 Requires:	groff-perl
 Requires:	openssl
@@ -26,7 +25,7 @@ BuildRequires:	automake
 BuildRequires:	chrpath
 BuildRequires:	cracklib-devel
 BuildRequires:	cups-devel
-BuildRequires:	db4.2-devel 
+BuildRequires:	libdb4.7-devel 
 BuildRequires:	gnutls-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	openslp-devel
@@ -34,7 +33,6 @@ BuildRequires:	openssl-devel
 BuildRequires:	pam-devel
 BuildRequires:	quota
 BuildRequires:	tcp_wrappers-devel
-BuildConflicts: xfs-devel
 Conflicts:	podracer
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -89,15 +87,9 @@ This package contains the static atalk library and its header files.
 %patch2 -p0 -b .shared
 %patch3 -p0 -b .2008
 %patch4 -p0 -b .bug25158
-%patch5 -p0 -b .CVE-2008-5718
 
 #(sb) breaks autoconf
 rm -fr autom4te.cache
-
-# (sb) name clash with yudit
-sed -i 's|uniconv|uniconvn|g' man/man1/uniconv.1.tmpl
-mv doc/htmldocs/uniconv.1.html doc/htmldocs/uniconvn.1.html
-sed -i 's|uniconv|uniconvn|g' doc/htmldocs/uniconvn.1.html
 
 %build
 %serverbuild
@@ -237,7 +229,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc CONTRIBUTORS NEWS README TODO doc/README* doc/FAQ doc/Netatalk* doc/htmldocs/*
+%doc CONTRIBUTORS NEWS README TODO doc/README* doc/FAQ 
 %attr(0755,root,root) %{_initrddir}/atalk
 %dir %{_sysconfdir}/%{name}
 %dir %{_var}/spool/%{name}
