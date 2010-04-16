@@ -5,7 +5,7 @@
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
 Version:	2.0.5
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	BSD
 Group:		System/Servers
 URL:		http://netatalk.sourceforge.net/
