@@ -4,7 +4,7 @@
 
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
-Version:	2.1
+Version:	2.1.3
 Release:	%mkrel 1
 License:	BSD
 Group:		System/Servers
@@ -13,8 +13,7 @@ Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		netatalk-mdk-etc2ps.patch
 Patch1:		netatalk-2.0.3-pinit.patch
 Patch2:		netatalk-shared.diff
-Patch3:		netatalk-2.1-install.patch
-Patch4:		netatalk-bug25158.diff
+Patch4:		netatalk-2.1.3-bug25158.patch
 Requires(pre):	rpm-helper
 Requires:	groff-perl
 Requires:	openssl
@@ -85,7 +84,6 @@ This package contains the static atalk library and its header files.
 %patch0 -p1 -b .mdk
 %patch1 -p1 -b .pinit
 %patch2 -p0 -b .shared
-%patch3 -p0 -b .install
 %patch4 -p0 -b .bug25158
 
 #(sb) breaks autoconf
@@ -106,13 +104,11 @@ export CFLAGS="$CFLAGS -fomit-frame-pointer -fsigned-char"
     --enable-shared \
     --enable-static \
     --with-uams-path=%{_libdir}/netatalk/uams \
-    --with-msg-dir=%{_libdir}/netatalk/msg \
     --with-ssl-dir=%{_prefix} \
     --enable-redhat \
     --with-cracklib \
     --with-pam \
     --with-shadow \
-    --with-tcp-wrappers \
     --enable-pgp-uam \
     --enable-timelord \
     --enable-dropkludge=no \
@@ -230,7 +226,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %doc CONTRIBUTORS NEWS README TODO doc/README* doc/FAQ 
-%attr(0755,root,root) %{_initrddir}/atalk
+%attr(0755,root,root) %{_initrddir}/%name
 %dir %{_sysconfdir}/%{name}
 %dir %{_var}/spool/%{name}
 %dir %{_libdir}/netatalk
