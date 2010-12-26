@@ -4,7 +4,7 @@
 
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
-Version:	2.1.3
+Version:	2.1.5
 Release:	%mkrel 1
 License:	BSD
 Group:		System/Servers
@@ -238,7 +238,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/%{name}/uams/*.so
 %{_bindir}/*
 %exclude %{_bindir}/%{name}-config
-%exclude %{multiarch_bindir}
+%exclude %{multiarch_bindir}/%{name}-config
 %{_sbindir}/*
 %{_mandir}/man[158]/*
 
@@ -250,6 +250,7 @@ rm -rf %{buildroot}
 %files -n %{develname}
 %defattr(-,root,root)
 %doc doc/DEVELOPER
+%{_bindir}/netatalk-config
 %{_libdir}/*.a
 %{_libdir}/*.so
 %{_libdir}/*.la
