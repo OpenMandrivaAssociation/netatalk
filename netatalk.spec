@@ -4,29 +4,34 @@
 
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
-Version:	2.1.5
+Version:	2.2.1
 Release:	%mkrel 1
 License:	BSD
 Group:		System/Servers
 URL:		http://netatalk.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		netatalk-mdk-etc2ps.patch
-Patch1:		netatalk-2.0.3-pinit.patch
-Patch2:		netatalk-shared.diff
-Patch4:		netatalk-2.1.3-bug25158.patch
+Patch1:		netatalk-shared.diff
+Patch2:		netatalk-2.2.1-linkage_fix.diff
+Patch3:		netatalk-2.2.1-no_libdir.diff
 Requires(pre):	rpm-helper
 Requires:	groff-perl
 Requires:	openssl
 Requires:	tetex-dvips
-BuildRequires:	libtool
+BuildRequires:	acl-devel
+BuildRequires:	attr-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	chrpath
+BuildRequires:	avahi-client-devel
+BuildRequires:	avahi-common-devel
 BuildRequires:	cracklib-devel
 BuildRequires:	cups-devel
-BuildRequires:	libdb4.8-devel 
+BuildRequires:	db-devel
+BuildRequires:	dbus-devel
 BuildRequires:	gnutls-devel
 BuildRequires:	libltdl-devel
+BuildRequires:	libtool
+BuildRequires:	openldap-devel
 BuildRequires:	openslp-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pam-devel
@@ -67,7 +72,7 @@ Summary:	Static library and header files for the atalk library
 Group:		Development/C
 Provides:	%{name}-devel = %{version}
 Obsoletes:	%{name}-devel
-Requires:	%{libname} = %{version}
+Requires:	%{libname} >= %{version}
 
 %description -n	%{develname}
 netatalk is an implementation of the AppleTalk Protocol Suite for Unix/Linux
@@ -82,9 +87,9 @@ This package contains the static atalk library and its header files.
 
 %setup -q -n %{name}-%{version}
 %patch0 -p1 -b .mdk
-%patch1 -p1 -b .pinit
-%patch2 -p0 -b .shared
-%patch4 -p0 -b .bug25158
+%patch1 -p0 -b .shared
+%patch2 -p0 -b .linkage_fix
+%patch3 -p0 -b .no_libdir
 
 #(sb) breaks autoconf
 rm -fr autom4te.cache
@@ -99,13 +104,13 @@ export LD_PRELOAD=
 export CFLAGS="$CFLAGS -fomit-frame-pointer -fsigned-char"
 
 %configure2_5x \
-    --libexec=%{_bindir} \
+    --libexecdir=%{_libdir} \
     --localstatedir=%{_var} \
     --enable-shared \
-    --enable-static \
+    --disable-static \
     --with-uams-path=%{_libdir}/netatalk/uams \
     --with-ssl-dir=%{_prefix} \
-    --enable-redhat \
+    --enable-redhat-systemd \
     --with-cracklib \
     --with-pam \
     --with-shadow \
@@ -113,7 +118,9 @@ export CFLAGS="$CFLAGS -fomit-frame-pointer -fsigned-char"
     --enable-timelord \
     --enable-dropkludge=no \
     --disable-shell-check \
-    --enable-srvloc
+    --enable-srvloc \
+    --with-ldap \
+    --with-acls
 
 %make all
 
@@ -122,8 +129,9 @@ rm -rf %{buildroot}
 
 ### INSTALL (USING "make install") ###
 install -d %{buildroot}{%{_prefix},%{_sysconfdir}/netatalk/}
-install -d %{buildroot}/%{_libdir}/netatalk
-install -d %{buildroot}/%{_libdir}/netatalk/msg
+install -d %{buildroot}%{_libdir}/netatalk
+install -d %{buildroot}%{_libdir}/netatalk/msg
+install -d %{buildroot}/var/spool/netatalk
 
 %makeinstall_std
 
@@ -139,29 +147,20 @@ EOF
 
 # clean up installed but unpackaged files
 rm -f %{buildroot}%{_includedir}/netatalk/*.c
-rm -f %{buildroot}%{_libdir}/netatalk/uams/*.la
-rm -f %{buildroot}%{_libdir}/netatalk/uams/*.a
+rm -f %{buildroot}%{_libdir}/netatalk/uams/*.*a
 rm -f %{buildroot}%{_datadir}/netatalk/pagecount.ps
+rm -f %{buildroot}%{_libdir}/*.*a
 
 # (sb) we don't ship the rc shell, and cleanappledouble.pl seems to do the same thing
 rm -f %{buildroot}%{_bindir}/acleandir.rc
 rm -f %{buildroot}%{_mandir}/man1/acleandir.1*
-
-# (sb) rpath cleanup
-#chrpath -d %{buildroot}%{_sbindir}/papd
-
-# (sb) mutliarch
-%multiarch_binaries %{buildroot}%{_bindir}/%{name}-config
 
 # (sb) name clash with yudit package
 mv %{buildroot}%{_bindir}/uniconv %{buildroot}%{_bindir}/uniconvn
 mv %{buildroot}%{_mandir}/man1/uniconv.1 %{buildroot}%{_mandir}/man1/uniconvn.1
 
 %post
-%_post_service atalk
-%if %mdkversion < 200900
-/sbin/ldconfig
-%endif
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 # after the first install only
 if [ "$1" = 1 ]; then
 	# add the ddp lines to /etc/services
@@ -191,9 +190,13 @@ _EOD2_
 fi
 
 %preun
-%_preun_service atalk
+if [ "$1" = "0" ] ; then
+	/bin/systemctl disable netatalk.service > /dev/null 2>&1 || :
+	/bin/systemctl stop netatalk.service > /dev/null 2>&1 || :
+fi
 
 %postun
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 # do only for the last un-install
 if [ "$1" = 0 ]; then
 	# remove the ddp lines from /etc/services
@@ -212,21 +215,15 @@ _EOD3_
 	fi
 fi
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
+%triggerun --  netatalk < 2.2.1
+/sbin/chkconfig --del netatalk >/dev/null 2>&1 || :
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc CONTRIBUTORS NEWS README TODO doc/README* doc/FAQ 
-%attr(0755,root,root) %{_initrddir}/%name
+%doc CONTRIBUTORS NEWS doc/README*
 %dir %{_sysconfdir}/%{name}
 %dir %{_var}/spool/%{name}
 %dir %{_libdir}/netatalk
@@ -236,28 +233,46 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/pam.d/netatalk
 %dir %{_libdir}/%{name}/uams
 %attr(0755,root,root) %{_libdir}/%{name}/uams/*.so
-%{_bindir}/*
-%exclude %{_bindir}/%{name}-config
-%exclude %{multiarch_bindir}/%{name}-config
-%{_sbindir}/*
+/lib/systemd/system/netatalk.service
+%{_libdir}/netatalk/netatalk.sh
+%{_bindir}/ad
+%{_bindir}/adv1tov2
+%{_bindir}/afpldaptest
+%{_bindir}/afppasswd
+%{_bindir}/apple_dump
+%{_bindir}/asip-status.pl
+%{_bindir}/binheader
+%{_bindir}/cnid2_create
+%{_bindir}/dbd
+%{_bindir}/hqx2bin
+%{_bindir}/lp2pap.sh
+%{_bindir}/macbinary
+%{_bindir}/macusers
+%{_bindir}/megatron
+%{_bindir}/nadheader
+%{_bindir}/single2bin
+%{_bindir}/unbin
+%{_bindir}/unhex
+%{_bindir}/uniconvn
+%{_bindir}/unsingle
+%{_sbindir}/afpd
+%{_sbindir}/cnid_dbd
+%{_sbindir}/cnid_metad
+%{_sbindir}/timelord
 %{_mandir}/man[158]/*
 
 %files -n %{libname}
 %defattr(-,root,root)
-%doc COPYRIGHT COPYING 
-%{_libdir}/*.so.*
+%doc COPYRIGHT COPYING
+%{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
 %defattr(-,root,root)
 %doc doc/DEVELOPER
 %{_bindir}/netatalk-config
-%{_libdir}/*.a
 %{_libdir}/*.so
-%{_libdir}/*.la
 %dir %{_includedir}/atalk
 %{_includedir}/atalk/*.h
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*.h
 %{_datadir}/aclocal/%{name}.m4
-%multiarch %{multiarch_bindir}/%{name}-config
-%{_mandir}/man[34]/*
