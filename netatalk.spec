@@ -29,7 +29,7 @@ BuildRequires:	cups-devel
 BuildRequires:	db-devel
 BuildRequires:	dbus-devel
 BuildRequires:	gnutls-devel
-BuildRequires:	libltdl-devel
+BuildRequires:	libtool-devel
 BuildRequires:	libtool
 BuildRequires:	openldap-devel
 BuildRequires:	openslp-devel
