@@ -115,12 +115,12 @@ export CFLAGS="$CFLAGS -fomit-frame-pointer -fsigned-char"
     --with-pam \
     --with-shadow \
     --enable-pgp-uam \
-    --enable-timelord \
     --enable-dropkludge=no \
     --disable-shell-check \
     --enable-srvloc \
     --with-ldap \
-    --with-acls
+    --with-acls \
+#   --enable-timelord
 
 %make all
 
@@ -258,7 +258,7 @@ rm -rf %{buildroot}
 %{_sbindir}/afpd
 %{_sbindir}/cnid_dbd
 %{_sbindir}/cnid_metad
-%{_sbindir}/timelord
+#%{_sbindir}/timelord
 %{_mandir}/man[158]/*
 
 %files -n %{libname}
