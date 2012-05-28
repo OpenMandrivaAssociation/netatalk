@@ -4,7 +4,7 @@
 
 Summary:	Appletalk and Appleshare/IP services for Linux
 Name:		netatalk
-Version:	2.2.2
+Version:	2.2.3
 Release:	1
 License:	BSD
 Group:		System/Servers
@@ -38,7 +38,6 @@ BuildRequires:	pam-devel
 BuildRequires:	quota
 BuildRequires:	tcp_wrappers-devel
 Conflicts:	podracer
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 netatalk is an implementation of the AppleTalk Protocol Suite for Unix/Linux
@@ -218,11 +217,7 @@ fi
 %triggerun --  netatalk < 2.2.1
 /sbin/chkconfig --del netatalk >/dev/null 2>&1 || :
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %doc CONTRIBUTORS NEWS doc/README*
 %dir %{_sysconfdir}/%{name}
 %dir %{_var}/spool/%{name}
@@ -262,12 +257,10 @@ rm -rf %{buildroot}
 %{_mandir}/man[158]/*
 
 %files -n %{libname}
-%defattr(-,root,root)
 %doc COPYRIGHT COPYING
 %{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
-%defattr(-,root,root)
 %doc doc/DEVELOPER
 %{_bindir}/netatalk-config
 %{_libdir}/*.so
