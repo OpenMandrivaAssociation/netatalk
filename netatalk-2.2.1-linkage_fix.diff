@@ -1,0 +1,20 @@
+--- libatalk/Makefile.am	2011-11-02 10:26:09.518928810 +0100
++++ libatalk/Makefile.am.oden	2011-11-02 10:29:16.991034293 +0100
+@@ -20,7 +20,7 @@
+ 	util/libutil.la		\
+ 	tdb/libtdb.la       \
+ 	unicode/libunicode.la \
+-	vfs/libvfs.la $(WRAP_LIBS)
++	vfs/libvfs.la $(WRAP_LIBS) $(ACL_LIBS)
+ 
+ libatalk_la_DEPENDENCIES = \
+ 	acl/libacl.la \
+@@ -35,7 +35,7 @@
+ 	util/libutil.la		\
+ 	tdb/libtdb.la       \
+ 	unicode/libunicode.la \
+-	vfs/libvfs.la $(WRAP_LIBS)
++	vfs/libvfs.la $(WRAP_LIBS) $(ACL_LIBS)
+ 
+ libatalk_la_LDFLAGS = -version-info 0:0:0
+ 

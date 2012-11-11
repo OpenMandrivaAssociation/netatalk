@@ -1,0 +1,28 @@
+--- netatalk-2.0.1/etc/psf/etc2ps.sh.mdk	2004-10-28 17:50:17.073937203 +0200
++++ netatalk-2.0.1/etc/psf/etc2ps.sh	2004-10-28 18:08:34.407496166 +0200
+@@ -9,14 +9,11 @@
+ # tag in the case.
+ #
+ 
+-DVIPSPATH=/usr/local/tex/bin
+-DVIPS=/usr/local/tex/bin/dvips
++DVIPS=/usr/bin/dvips
+ DVIPSARGS="-f -q"
+ 
+-TROFF2PS=/usr/local/psroff/troff2/troff2ps
+-TROFF2PSARGS="-Z -O-.10"
+-
+-PATH=/usr/bin:$DVIPSPATH; export PATH
++TROFF2PS=/usr/bin/grog
++TROFF2PSARGS="-S -Tps"
+ 
+ case $1 in
+ 
+@@ -38,6 +35,7 @@
+ 
+ #
+ # troff2ps is from psroff by Chris Lewis.
++# (sb) not included in Mandriva, use grog
+ #
+ tf*)
+     if [ -x "$TROFF2PS" ]; then

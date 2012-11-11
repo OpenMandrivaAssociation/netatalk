@@ -1,0 +1,23 @@
+--- libatalk/Makefile.am.shared	2011-11-07 10:27:49.000000000 +0000
++++ libatalk/Makefile.am	2012-05-14 11:10:39.582132165 +0100
+@@ -16,7 +16,7 @@
+ 	util/libutil.la		\
+ 	tdb/libtdb.la       \
+ 	unicode/libunicode.la \
+-	vfs/libvfs.la
++	vfs/libvfs.la $(WRAP_LIBS)
+ 
+ libatalk_la_DEPENDENCIES = \
+ 	acl/libacl.la \
+@@ -27,9 +27,9 @@
+ 	util/libutil.la		\
+ 	tdb/libtdb.la       \
+ 	unicode/libunicode.la \
+-	vfs/libvfs.la
++	vfs/libvfs.la $(WRAP_LIBS)
+ 
+-libatalk_la_LDFLAGS = -static
++libatalk_la_LDFLAGS = -version-info 0:0:0
+ 
+ if USE_APPLETALK
+ SUBDIRS +=  asp atp nbp netddp

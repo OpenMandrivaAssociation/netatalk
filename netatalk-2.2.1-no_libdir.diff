@@ -1,0 +1,15 @@
+--- distrib/config/netatalk-config.in	2011-07-22 06:30:42.000000000 +0200
++++ distrib/config/netatalk-config.in.oden	2011-11-02 11:01:32.298295535 +0100
+@@ -218,11 +218,8 @@
+ if test "@includedir@" != /usr/include ; then
+   includes="-I@includedir@"
+ fi
+-if test "@libdir@" != /usr/lib ; then
+-  libs="-L@libdir@"
+-fi
+ af_cflags="$af_cflags $includes"
+-af_libs="$libs -latalk"
++af_libs="-latalk"
+ 
+ 
+ 
