@@ -269,3 +269,86 @@ fi
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*.h
 %{_datadir}/aclocal/%{name}.m4
+
+
+%changelog
+* Mon May 28 2012 Alexander Khrukin <akhrukin@mandriva.org> 2.2.3-1
++ Revision: 801002
+- version update 2.2.3
+
+* Mon May 14 2012 Crispin Boylan <crisb@mandriva.org> 2.2.2-1
++ Revision: 798762
+- Disable timelord for now (build error)
+- Rediff patch 1
+- New release
+- Rebuild
+
+* Wed Nov 02 2011 Oden Eriksson <oeriksson@mandriva.com> 2.2.1-1
++ Revision: 712188
+- 2.2.1
+- use systemd and drop sysv
+- fix deps and linkage
+- cleanups
+
+* Sun Dec 26 2010 Funda Wang <fwang@mandriva.org> 2.1.5-1mdv2011.0
++ Revision: 625146
+- new version 2.1.5
+
+* Thu Jul 15 2010 Funda Wang <fwang@mandriva.org> 2.1.3-1mdv2011.0
++ Revision: 553461
+- new version 2.1.3
+
+* Mon Apr 26 2010 Funda Wang <fwang@mandriva.org> 2.1-1mdv2010.1
++ Revision: 539150
+- 2.1
+
+* Fri Apr 16 2010 Funda Wang <fwang@mandriva.org> 2.0.5-3mdv2010.1
++ Revision: 535276
+- rebuild
+
+* Thu Jan 07 2010 Michael Scherer <misc@mandriva.org> 2.0.5-2mdv2010.1
++ Revision: 487235
+- rebuild for libdb4.8
+
+* Wed Nov 11 2009 Frederik Himpe <fhimpe@mandriva.org> 2.0.5-1mdv2010.1
++ Revision: 464807
+- update to new version 2.0.5
+
+* Sat May 30 2009 Frederik Himpe <fhimpe@mandriva.org> 2.0.4-1mdv2010.0
++ Revision: 381486
+- Update to new version 2.0.4
+- Remove security patch: fixed upstream
+- Rediff bug25158 (init script) patch
+- Don't buildconflict with xfs-devel: not necessary
+- Build against libdb4.7
+
+* Tue Feb 24 2009 Oden Eriksson <oeriksson@mandriva.com> 2.0.3-13mdv2009.1
++ Revision: 344559
+- P5: security fix for CVE-2008-5718
+
+* Fri Aug 08 2008 Thierry Vignaud <tv@mandriva.org> 2.0.3-12mdv2009.0
++ Revision: 268262
+- rebuild early 2009.0 package (before pixel changes)
+
+  + Pixel <pixel@mandriva.com>
+    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
+
+* Mon Apr 21 2008 Oden Eriksson <oeriksson@mandriva.com> 2.0.3-11mdv2009.0
++ Revision: 196245
+- fix #25158 (ATALK should use modprobe -q)
+
+* Mon Jan 21 2008 Funda Wang <fwang@mandriva.org> 2.0.3-10mdv2008.1
++ Revision: 155523
+- BR db4.2
+- rebuild
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Sat Aug 11 2007 Oden Eriksson <oeriksson@mandriva.com> 2.0.3-9mdv2008.0
++ Revision: 62037
+- Import netatalk
+
