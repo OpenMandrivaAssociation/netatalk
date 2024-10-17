@@ -8,7 +8,7 @@ Version:	2.2.3
 Release:	2
 License:	BSD
 Group:		System/Servers
-URL:		http://netatalk.sourceforge.net/
+URL:		https://netatalk.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Patch0:		netatalk-mdk-etc2ps.patch
 Patch1:		netatalk-shared.diff
