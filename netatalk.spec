@@ -26,8 +26,7 @@ BuildRequires:	cups-devel
 BuildRequires:	db-devel
 BuildRequires:	dbus-devel
 BuildRequires:	gnutls-devel
-BuildRequires:	libtool-devel
-BuildRequires:	libtool
+BuildRequires:	iniparser-devel
 BuildRequires:	pkgconfig(ldap)
 BuildRequires:	openslp-devel
 BuildRequires:	pkgconfig(openssl)
